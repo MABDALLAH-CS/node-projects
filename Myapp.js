@@ -25,11 +25,42 @@ app.post("/tasks", (req, res) => {
 });
 
 app.get("/tasks/:id", (req, res) => {
-  const id = Number(req.params.id, 10);
+  const id = Number(req.params.id);
   const task = tasks.find((t) => t.id === id);
   if (!task) {
     res.status(404).json({ error: "Task not found" });
   }
+  res.json(task);
+});
+
+app.put("/tasks/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const task = tasks.find((t) => t.id === id);
+  if (!task) {
+    res.status(404).json({ error: "Task not found" });
+  }
+  const {title, completed} = req.body;
+
+  if(title == undefined || completed == undefined)
+  {
+    res.status(400).json({ error: "please give a title and completed status"});
+  }
+  task.title = title;
+  task.completed = completed;
+
+  res.json(task);
+});
+
+app.patch("/tasks/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const task = tasks.find((t) => t.id === id);
+  if (!task) {
+    res.status(404).json({ error: "Task not found" });
+  }
+  const {title, completed} = req.body;
+ 
+  Object.assign(task, req.body);
+  
   res.json(task);
 });
 
